@@ -1,0 +1,15 @@
+﻿  Game.cpp
+  Play.cpp
+D:\visual\Tetris\Tetris\Play.cpp(183,6): warning C4101: 'var': unreferenced local variable
+D:\visual\Tetris\Tetris\Play.cpp(335,79): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\visual\Tetris\Tetris\Play.cpp(335,58): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Generating Code...
+  Tetris.vcxproj -> D:\visual\Tetris\x64\Debug\Tetris.exe
