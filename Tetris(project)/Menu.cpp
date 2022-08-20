@@ -2,6 +2,8 @@
 
 void Menu::maininit()
 {
+	//Initializing the menu objects and variables
+
 	if (!font2.loadFromFile("texture/8bitlimr.ttf"))
 		throw("Could not load font!");
 	pause_selection = 0;
@@ -48,7 +50,6 @@ void Menu::maininit()
 	NoOption.setStyle(Text::Bold);
 	NoOption.setPosition(720* 0.87,800 * 0.5);
 	NoOption.setString("No");
-
 }
 
 
@@ -65,6 +66,8 @@ void Menu::Checkevent(sf::Event evt)
 	{
 		if (mode == 0)
 		{
+			//For paused mode
+			//Allows the user to select options with the down or up key
 			if (evt.key.code == sf::Keyboard::Down)
 			{
 
@@ -127,6 +130,7 @@ void Menu::Checkevent(sf::Event evt)
 				}
 
 			}
+			//To enter into a certain selection
 			if (pause_selection == 0 && evt.key.code == Keyboard::Return)
 			{
 				this->resume_check = true;
@@ -157,9 +161,10 @@ void Menu::Checkevent(sf::Event evt)
 				this->exit_check = true;
 			}
 		}
-		//upto here.. this is used only for paused mode..if they are used in gameover mode they are ignored..now for gameover mode
+		
 		else if (mode == 1)
 		{
+			//For gameover mode
 			if (evt.key.code == sf::Keyboard::Right)
 			{
 				if (play_end == 0)//play_end means if you want to play again or exit
@@ -202,17 +207,21 @@ void Menu::Checkevent(sf::Event evt)
 	}
 
 }
-	void Menu::paused_menu_items(sf::RenderTarget* target)
-	{
-		target->draw(this->resume);
-		target->draw(this->newgame);
-		this->sound.setString("Music " + on_off);
-		target->draw(this->sound);
-		target->draw(this->exit);
-	}
-	void Menu::game_over_selection(sf::RenderTarget* target)
-	{
-		target->draw(this->NoOption);
-		target->draw(this->YesOption);
-		target->draw(this->AskContinue);
-	}
+
+//Draws the paused menu
+void Menu::paused_menu_items(sf::RenderTarget* target)
+{
+	target->draw(this->resume);
+	target->draw(this->newgame);
+	this->sound.setString("Music " + on_off);
+	target->draw(this->sound);
+	target->draw(this->exit);
+}
+
+//Draws the gameover menu
+void Menu::game_over_selection(sf::RenderTarget* target)
+{
+	target->draw(this->NoOption);
+	target->draw(this->YesOption);
+	target->draw(this->AskContinue);
+}

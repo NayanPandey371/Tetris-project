@@ -7,7 +7,6 @@
 //Protected functions
 void Game::initvariable()
 {
-
 	//Window pointer initialization
 	this->window = nullptr;
 }
@@ -40,9 +39,9 @@ const bool Game::getWindowIsOpen() const
 //Functions
 void Game::render()
 {
-
-
 	this->window->clear();
+
+	//Checking the game state and drawing accordingly
 	if (strcmp(state, "play") == 0 or strcmp(state, "paused") == 0 or strcmp(state, "gameover") == 0)
 		this->play.Render(this->window);
 	if (strcmp(state, "home") == 0)
@@ -50,7 +49,6 @@ void Game::render()
 		home.draw_background(this->window);
 		if (home.mode == 0)
 		{
-			
 			home.draw_background_options(this->window);
 		}
 	 else if (home.mode == 1)
@@ -67,9 +65,6 @@ void Game::render()
 
 	if (strcmp(state, "play") == 0 or strcmp(state, "paused") == 0)
 	{
-		
-
-		
 		this->play.draw_shadow(this->window);
 		this->play.draw_block(this->window);
 		this->play.draw_Pblock(this->window);
@@ -85,18 +80,23 @@ void Game::render()
 		this->play.draw_dead_block(this->window);
 		if (!(strcmp(state, "home") == 0))
 		{
-			this->data.score_check =this-> play.score_value;
-			this->data.score_update();
 			strcpy_s(state, 9, "gameover");
-			
+			if (set)
+			{
+				if (data.check(play.score()) == true)
+					c = true;
+				set = false;
+			}
+			if(c)
+				this->play.draw_high(this->window);
 		}
 		
 		this->menu.game_over_selection(this->window);
 	}
 	this->window->display();
-
 }
 
+//Updates the game in each frame
 void Game::update()
 {
 	if (menu.sound_check == true)//by default true
@@ -109,7 +109,6 @@ void Game::update()
 		}
 		this->play.sfx_mainsound.setVolume(this->play.volume_value * 10);
 	}
-
 
 	this->UpdateEvents();
 	
@@ -151,13 +150,11 @@ void Game::update()
 
 		}
 
-	
-
 		
 	}
 	else if (strcmp(state, "gameover") == 0) //gameover mode ignores input for input mode and read actually gameover mode inputs 
 	{
-	
+		
 		if (menu.nnewgame)
 		{
 			
@@ -166,6 +163,8 @@ void Game::update()
 			this->play.clear_game(this->window);
 			if (music_off_check == false)
 				this->play.sfx_mainsound.play();
+			set = true;
+			c = false;
 		}
 		else if (menu.exitgame)
 		{
@@ -173,8 +172,9 @@ void Game::update()
 			strcpy_s(state, 5, "home");
 			this->play.clear_game(this->window);
 			if (music_off_check == false)
-			this->play.sfx_mainsound.play();
-			
+				this->play.sfx_mainsound.play();
+			set = true;
+			c = false;
 		}
 		
 	}
@@ -197,7 +197,6 @@ void Game::update()
 		{
 			home.mode = 1;
 			home.Instructions_check = false;
-			//home.Instructions_check = false;
 		}
 		if (home.exit_check)
 		{
@@ -212,7 +211,6 @@ void Game::update()
 	this->play.volume_value = this->home.volume_control;
 	
 }
-
 
 
 void Game::UpdateEvents()
@@ -252,14 +250,7 @@ void Game::UpdateEvents()
 						}
 					}
 			}
-			/*else if (e.key.code == sf::Keyboard::N)
-			{
-
-				this->play.clear_game(this->window);
-				strcpy_s(state, 5, "play");
-
-			}*/
-
+			
 			break;
 
 
@@ -276,8 +267,5 @@ void Game::UpdateEvents()
 			play.Checkevent(e);
 		if (strcmp(state, "home") == 0)
 			home.Checkevent(e);
-
-
-
 	}
 }

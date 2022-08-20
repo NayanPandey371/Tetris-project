@@ -3,6 +3,7 @@ bool home_scr::get_into_game(sf::RenderTarget* target)
 {
 	return false;
 }
+
 home_scr::home_scr()
 {
 	this->initilization();
@@ -16,35 +17,35 @@ void home_scr::initilization()
 	if (!font3.loadFromFile("texture/8bitlimr.ttf"))
 		throw("Could not load font!");
 
-	up_down = 0;
-	mode = 0;
-	playText.setFont(font3);
-	playText.setCharacterSize(24);
-	playText.setStyle(Text::Bold);
-	playText.setString("PLAY");
-	playText.setPosition(720 * 0.45, 800 * 0.4);
-	playText.setFillColor(Color::Red);
+	up_down = 0; //tracks the position of the user's selection in the menu
+	mode = 0; //0 is the homescreen menu 1 is the gameover menu
+	txt[0].setFont(font3);
+	txt[0].setCharacterSize(24);
+	txt[0].setStyle(Text::Bold);
+	txt[0].setString("PLAY");
+	txt[0].setPosition(720 * 0.45, 800 * 0.4);
+	txt[0].setFillColor(Color::Red);
 
-	HighScores.setFont(font3);
-	HighScores.setCharacterSize(24);
-	HighScores.setStyle(Text::Bold);
-	HighScores.setString("HIGH SCORES");
-	HighScores.setPosition(720 * 0.45, 800 * 0.45);
-	HighScores.setFillColor(Color::Blue);
+	txt[1].setFont(font3);
+	txt[1].setCharacterSize(24);
+	txt[1].setStyle(Text::Bold);
+	txt[1].setString("HIGH SCORES");
+	txt[1].setPosition(720 * 0.45, 800 * 0.45);
+	txt[1].setFillColor(Color::Blue);
 
-	Instructions.setFont(font3);
-	Instructions.setCharacterSize(24);
-	Instructions.setStyle(Text::Bold);
-	Instructions.setString("INSTRUCTIONS");
-	Instructions.setPosition(720 * 0.45, 800 * 0.5);
-	Instructions.setFillColor(Color::Blue);
+	txt[2].setFont(font3);
+	txt[2].setCharacterSize(24);
+	txt[2].setStyle(Text::Bold);
+	txt[2].setString("INSTRUCTIONS");
+	txt[2].setPosition(720 * 0.45, 800 * 0.5);
+	txt[2].setFillColor(Color::Blue);
 
-	sound.setFont(font3);
-	sound.setCharacterSize(24);
-	sound.setStyle(Text::Bold);
-	sound.setString("SOUND ON");
-	sound.setPosition(720 * 0.45, 800 * 0.55);
-	sound.setFillColor(Color::Blue);
+	txt[3].setFont(font3);
+	txt[3].setCharacterSize(24);
+	txt[3].setStyle(Text::Bold);
+	txt[3].setString("SOUND ON");
+	txt[3].setPosition(720 * 0.45, 800 * 0.55);
+	txt[3].setFillColor(Color::Blue);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -64,14 +65,12 @@ void home_scr::initilization()
 		volume[i].setFillColor(Color::Blue);
 	}
 
-	exit.setFont(font3);
-	exit.setCharacterSize(24);
-	exit.setStyle(Text::Bold);
-	exit.setString("EXIT");
-	exit.setPosition(720 * 0.45, 800 * 0.6);
-	exit.setFillColor(Color::Blue);
-
-
+	txt[4].setFont(font3);
+	txt[4].setCharacterSize(24);
+	txt[4].setStyle(Text::Bold);
+	txt[4].setString("EXIT");
+	txt[4].setPosition(720 * 0.45, 800 * 0.6);
+	txt[4].setFillColor(Color::Blue);
 }
 void home_scr::draw_background(sf::RenderTarget* target)
 {
@@ -82,110 +81,45 @@ void home_scr::draw_background(sf::RenderTarget* target)
 void home_scr::draw_background_options(sf::RenderTarget* target)
 {
 	
-	target->draw(this->HighScores);
-	target->draw(this->Instructions);
-	target->draw(this->sound);
-	target->draw(this->exit);
-	target->draw(this->playText);
+	target->draw(this->txt[1]);
+	target->draw(this->txt[2]);
+	target->draw(this->txt[3]);
+	target->draw(this->txt[4]);
+	target->draw(this->txt[0]);
 	for (int i = 0; i < 10; i++)
 	{
 		target->draw(this->volume[i]);
 	}
 }
 
-
-
+//Returns the volume
 int home_scr::volume_level(sf::RenderTarget* target)
 {
 	return volume_control;
 }
+
+//Checks the users inputs and acts accordingly
 void home_scr::Checkevent(sf::Event evt)
 {
 	if (evt.type == sf::Event::KeyPressed)
 	{
-	    /* if (this->mode == 1 && evt.key.code == sf::Keyboard::Escape)
-	     {
-		this->mode = 0;
-	     }*/
 		 if (mode == 0 && evt.key.code == sf::Keyboard::Down)
-		{
-
-			if (this->up_down == 0)
-			{
-				playText.setFillColor(Color::Blue);
-				HighScores.setFillColor(Color::Red);
-				this->up_down = up_down + 1;
-
-			}
-
-			else if (this->up_down == 1)
-			{
-				HighScores.setFillColor(Color::Blue);
-				Instructions.setFillColor(Color::Red);
-				this->up_down = up_down + 1;
-
-			}
-			else if (this->up_down == 2)
-			{
-				Instructions.setFillColor(Color::Blue);
-				sound.setFillColor(Color::Red);
-				this->up_down = up_down + 1;
-
-			}
-			else if (this->up_down == 3)
-			{
-				sound.setFillColor(Color::Blue);
-				exit.setFillColor(Color::Red);
-				this->up_down = up_down + 1;
-			}
-			else if (this->up_down == 4)
-			{
-				playText.setFillColor(Color::Red);
-				exit.setFillColor(Color::Blue);
-				this->up_down = 0;
-			}
+		 {
+			 txt[up_down].setFillColor(Color::Blue);
+			 up_down = (up_down + 1) % 5;
+			 txt[up_down].setFillColor(Color::Red);
 		}
 		else if (mode == 0 && evt.key.code == sf::Keyboard::Up)
 		{
-
-			if (this->up_down == 0)
-			{
-				playText.setFillColor(Color::Blue);
-				exit.setFillColor(Color::Red);
-				this->up_down = 4;
-
-			}
-
-			else if (this->up_down == 1)
-			{
-				HighScores.setFillColor(Color::Blue);
-				playText.setFillColor(Color::Red);
-
-				this->up_down = up_down - 1;
-
-			}
-			else if (this->up_down == 2)
-			{
-				Instructions.setFillColor(Color::Blue);
-				HighScores.setFillColor(Color::Red);
-
-				this->up_down = up_down - 1;
-
-			}
-			else if (this->up_down == 3)
-			{
-				sound.setFillColor(Color::Blue);
-				Instructions.setFillColor(Color::Red);
-
-				this->up_down = up_down - 1;
-			}
-			else if (this->up_down == 4)
-			{
-				sound.setFillColor(Color::Red);
-				exit.setFillColor(Color::Blue);
-				this->up_down = up_down - 1;
-			}
+			 txt[up_down].setFillColor(Color::Blue);
+			 if (up_down == 0)
+				 up_down = 4;
+			 else
+				 up_down = up_down - 1;
+			 txt[up_down].setFillColor(Color::Red);
+			 
 		}
+		 //For entering the state of user's choice
 		if (mode == 0 && up_down == 0 && evt.key.code == Keyboard::Return)
 		{
 			playText_check = true;
@@ -206,260 +140,26 @@ void home_scr::Checkevent(sf::Event evt)
 		{
 			exit_check = true;
 		}
+
+		//To increase the sound
 		else if (mode == 0 && up_down==3 && evt.key.code == sf::Keyboard::Right)
 		{
-			if (this->volume_control == 0)
+			if (this->volume_control < 10)
 			{
-				volume_control += 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
-			else if (this->volume_control == 1)
-			{
-				volume_control += 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			
-			}
-			else if (this->volume_control == 2)
-			{
-				volume_control += 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-		
-			}
-			else if (this->volume_control == 3)
-			{
-				volume_control += 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			
-			}
-			else if (this->volume_control == 4)
-			{
-				volume_control += 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
+				this->volume_control += 1;
+				volume[volume_control - 1].setFillColor(Color::Red);
 			}
 			
-			else if (this->volume_control == 5)
-			{
-				volume_control += 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
-			else if (this->volume_control == 6)
-			{
-				volume_control += 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
-			else if (this->volume_control == 7)
-			{
-				volume_control += 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
-			else if (this->volume_control == 8)
-			{
-			volume_control += 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
-			else if (this->volume_control == 9)
-			{
-			volume_control += 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
 		}
+
+		//To decrease the sound
 		else if (mode == 0 && up_down == 3  && evt.key.code == sf::Keyboard::Left)
 		{
-			if (this->volume_control == 1)
+			if (this->volume_control > 0)
 			{
-				volume_control -= 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-
+				volume[this->volume_control - 1].setFillColor(Color::Blue);
+				this->volume_control -= 1;
 			}
-			else if (this->volume_control == 2)
-			{
-				volume_control -= 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-
-			}
-			else if (this->volume_control == 3)
-			{
-				volume_control -= 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-
-			}
-			else if (this->volume_control == 4)
-			{
-				volume_control -= 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
-
-			else if (this->volume_control == 5)
-			{
-				volume_control -= 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
-			else if (this->volume_control == 6)
-			{
-				volume_control -= 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
-			else if (this->volume_control == 7)
-			{
-				volume_control -= 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
-			else if (this->volume_control == 8)
-			{
-				volume_control -= 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
-			else if (this->volume_control == 9)
-			{
-				volume_control -=1 ;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
-			else if (this->volume_control == 10)
-			{
-				volume_control -= 1;
-				for (int i = 0; i < volume_control; i++)
-				{
-					volume[i].setFillColor(Color::Red);
-				}
-				for (int i = volume_control; i < 10; i++)
-				{
-					volume[i].setFillColor(Color::Blue);
-				}
-			}
- 
 		}
 		
 	}

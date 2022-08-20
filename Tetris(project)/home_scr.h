@@ -11,9 +11,9 @@ private:
 	Texture background;
 	RectangleShape shape;
 	Text playText, HighScores, Instructions, exit, sound,volume[10];
+	Text txt[5];
 	Font font3;
 	int up_down = 0;
-	
 public:
 	int volume_control = 2;
 	bool playText_check = false, HighScores_check = false, Instructions_check = false, exit_check = false, sound_check = false;

@@ -89,10 +89,8 @@ private:
 	Sound sfx_harddrop;
 	SoundBuffer buffer_harddrop;
 
-	
-
 	Font font;
-	Text txt, scr, gameisover, final_score;
+	Text txt, scr, gameisover, final_score, highscore;
 
 	float game_speed;
 	int new_score_on_clearing();
@@ -140,6 +138,9 @@ public:
 	void draw_dead_block(sf::RenderTarget* target);
 	void clear_game(sf::RenderTarget* target);
 	//void mainsound_Play(sf::RenderTarget* target);
+	void draw_high(sf::RenderTarget* target);
+
+	int score();
 };
 
 

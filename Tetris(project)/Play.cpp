@@ -2,28 +2,33 @@
 
 void Play::initGameObj()
 {
+	//Initializing game objects
+
 	this->cell.setSize(sf::Vector2f(cell_size, cell_size));//for falling blocks themselves in the game
+
+	//Loads the texture from file and sets it to required size
 	this->texture.loadFromFile("texture/image.png");
 	this->cell.setTexture(&texture);
 	this->textureSize = texture.getSize();
 	this->textureSize.x /= 10;
 	this->textureSize.y /= 1;
-
 	this->texture.setSmooth(false);
 
-	this->grid.setSize(sf::Vector2f(cell_size - 1, cell_size - 1));// for grid//change value and see changes
-	this->dead_block.setSize(sf::Vector2f(cell_size - 2, cell_size - 2));//for block seen after game over
+	//For the background grid in game
+	this->grid.setSize(sf::Vector2f(cell_size - 1, cell_size - 1));
 
+	//For blocks after game is over
+	this->dead_block.setSize(sf::Vector2f(cell_size - 2, cell_size - 2));
 	this->dead_block.setTexture(&texture);
 
-	
-
-	this->explode.setSize(sf::Vector2f(cell_size - 15, cell_size - 15));//size is 25 // explode is not quite appporiate name...
-
+	//For explosion of the block while clearing
+	this->explode.setSize(sf::Vector2f(cell_size - 15, cell_size - 15));
 	this->explode.setTexture(&texture);
 
+	//For shadow of the blocks at the bottom of the board
 	this->shadow.setSize(sf::Vector2f(cell_size - 2, cell_size - 2));
 
+	//For preview of the new block
 	this->preview_border.setSize(sf::Vector2f(320, h_cnt * cell_size));// to get that white line that seperates the grid from side window
 	preview_border.setFillColor(sf::Color(100, 100, 100, 150));
 	preview_border.setOutlineThickness(1);
@@ -43,12 +48,10 @@ void Play::initGameObj()
 		}
 		*/
 	
-	
-
-
 	game_speed = 0.5;
 	game_over_check = false;
 
+	//Initializing sounds
 	buffer_clearline.loadFromFile("audio/clearline.ogg");
 	sfx_clearline.setBuffer(buffer_clearline);
 
@@ -69,18 +72,16 @@ void Play::initGameObj()
 	buffer_mainsound.loadFromFile("audio/tetris.ogg");
 	sfx_mainsound.setBuffer(buffer_mainsound);
 	sfx_mainsound.setLoop(true);
-	//sfx_mainsound.setVolume(0);
     sfx_mainsound.play();
 	
-	
-
+	//Initializing fonts and texts
 	if (!font.loadFromFile("texture/8bitlimr.ttf"))
 		throw("Could not load font!");
 	txt.setFont(font);
 	txt.setCharacterSize(24);
 	txt.setStyle(Text::Bold);
 	txt.setString("Next Block");
-	txt.setPosition(720 * 0.69, 800 * 0.05);
+	txt.setPosition(720 * float(0.69), 800 * float(0.05));
 	
 	gameisover.setFont(font);
 	gameisover.setCharacterSize(50);
@@ -89,22 +90,28 @@ void Play::initGameObj()
 	gameisover.setString("GAME OVER");
 	gameisover.setPosition(720 * 0.10, 800 * 0.43);
 
+	highscore.setFont(font);
+	highscore.setCharacterSize(45);
+	highscore.setStyle(Text::Bold);
+	highscore.setFillColor(Color::Color(34, 139, 34));
+	highscore.setString("HIGH SCORE!!!");
+	highscore.setPosition(720 * 0.10, 800 * 0.35);
+
 	scr.setFont(font);
 	scr.setCharacterSize(24);
-	scr.setString("score : " + score_value_converted_string);
-	scr.setPosition(720 * 0.69, 800* 0.6);
+	scr.setString("SCORE : " + score_value_converted_string);
+	scr.setPosition(720 * float(0.69), 800* float(0.6));
 
 	final_score.setFont(font);
 	final_score.setCharacterSize(25);
 	final_score.setStyle(Text::Bold);
 	final_score.setFillColor(Color::Red);
-
 }
 
 
 Play::Play()
 {
-	srand(time(0));
+	srand((unsigned int(time(NULL))));
 	new_block();
 	preview_block();
 	this->initGameObj();
@@ -127,24 +134,15 @@ void Play::clear_lines()
 		{
 			if (to != from)
 			{
-
 				line_check = true;
-				this->sfx_clearline.setVolume(this->volume_value * 10);
+				this->sfx_clearline.setVolume(float(this->volume_value * 10));
 				sfx_clearline.play();
 			}
 
 			for (int x = 0; x < w_cnt; x++)
 			{
-
 				world_temp[to][x] = world[from][x];
-
-				//don't know how to solve this warning..try if you can
-				//don't change the way this is written because world_temp is used to update gameover check,delay,dead block drawing
-				//just see for warning
-				//old code ma suru ma yo warning aathiyo then aafai gayo...don't know how..tya bata herna milxa ki
-
 			}
-
 			to--;
 
 		}
@@ -167,7 +165,7 @@ void Play::clear_lines()
 			}
 			score_value += new_score_on_clearing();
 			if (game_speed > 0.25)
-				game_speed -= 0.01;//decreases falling speed
+				game_speed -= static_cast<float>(0.01);//decreases falling speed
 			if (game_speed <= 0.25)
 				game_speed = 0.25;
 		}
@@ -179,7 +177,7 @@ void Play::clear_lines()
 };
 
 
-     void Play::game_over() //bool Play::game_over()
+void Play::game_over() 
 {
 	int temp2 = 4;
 	if (kind == 0)
@@ -190,13 +188,12 @@ void Play::clear_lines()
 			{
 				game_over_check=true;
 				sfx_mainsound.pause();
-				this->sfx_gameover.setVolume(this->volume_value * 10);
-			     sfx_gameover.play();
-				
-				
+				this->sfx_gameover.setVolume(float(this->volume_value * 10));
+			    sfx_gameover.play();
+
 			}
 };
-	 int Play::new_score_on_clearing()
+int Play::new_score_on_clearing()
 	 {
 		 if (game_speed >= 0.45)
 			 return 50;
@@ -227,7 +224,7 @@ void Play::new_block()
 void Play::preview_block()
 {
 	next = rand() % 7;//(next is used for block for preview window)
-	px = w_cnt + 3;
+	px = w_cnt + static_cast<float>(3.0);
 	py = 2+0.5;
 	if (next == 0)//for this(----) block to get it to center in the preview window
 	{
@@ -255,7 +252,6 @@ void Play::clear_lines_d()
 {
 	for (int y = h_cnt - 1; y >= 0; y--)for (int x = 0; x < w_cnt; x++)
 	{
-
 		world[y][x] = world_temp[y][x];
 	}
 	stop_animation = true;
@@ -327,11 +323,10 @@ void Play::update()
 		prev = clock.getElapsedTime().asSeconds();
 
 	}
-	 static float prev1 = clock.getElapsedTime().asSeconds();
+	static float prev1 = clock.getElapsedTime().asSeconds();
 	if (clock.getElapsedTime().asSeconds() - prev1 >= 0.4)
 	{
 		prev1 = clock.getElapsedTime().asSeconds();
-
 
 		if (line_check == true)
 		{
@@ -359,7 +354,6 @@ void Play::Render(sf::RenderTarget* target)
 		target->draw(this->scr);
 	}
 
-	//target->draw(this->)
 
 }
 
@@ -444,7 +438,7 @@ void Play::clear_anm(sf::RenderTarget* target)
 				for (int x = 0; x < w_cnt; x++)
 				{
 					this->explode.setTextureRect(sf::IntRect(textureSize.x * 9, 0, textureSize.x, textureSize.y));
-					this->explode.setPosition(sf::Vector2f(x * cell_size + 7.5, j * cell_size + 7.5));
+					this->explode.setPosition(sf::Vector2f(x * cell_size + float(7.5), j * cell_size + float(7.5)));
 					target->draw(explode);
 				}
 	}
@@ -492,16 +486,15 @@ void Play::draw_dead_block(sf::RenderTarget* target)
 	}
 	target->draw(this->gameisover);
 	if (score_value > 0) {
-		final_score.setPosition(720 * 0.14, 800 * 0.5);
+		final_score.setPosition(720 * float(0.14), 800 * float(0.5));
 	}
 	else if (score_value == 0)
 	{
-		final_score.setPosition(720 * 0.17, 800 * 0.5);
+		final_score.setPosition(720 * float(0.17), 800 * float(0.5));
 	}
 	
-	final_score.setString("score :" + score_value_converted_string);
+	final_score.setString("SCORE  " + score_value_converted_string);
 	target->draw(this->final_score);
-
 }
 void Play::clear_game(sf::RenderTarget* target)
 {
@@ -524,6 +517,16 @@ void Play::clear_game(sf::RenderTarget* target)
 		game_speed = 0.5;
 		
 		
+}
+void Play::draw_high(sf::RenderTarget* target)
+{
+	target->draw(this->highscore);
+}
+int Play::score()
+{
+	if (game_over_check)
+		return score_value;
+	return 0;
 }
 void Play::Checkevent(sf::Event e)
 {
@@ -549,14 +552,10 @@ void Play::Checkevent(sf::Event e)
 			if (line_check == true)
 				clear_lines_d();// this is necessary, you can ask me
 			while (go_down() == true);
-			this->sfx_harddrop.setVolume(this->volume_value * 10);
+			this->sfx_harddrop.setVolume(float(this->volume_value * 10));
 			sfx_harddrop.play();
 		}
 		else if (e.key.code == sf::Keyboard::Up)
-			rotate();
-		
-
-	
-		
+			rotate();	
 	}
 }

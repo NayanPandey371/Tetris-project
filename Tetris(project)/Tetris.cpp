@@ -4,22 +4,18 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "home_scr.h"
+
 int main()
 {
-	
-	Game game;//INITIALIZES CONSTRUCTOR FROM GAME,since a play type data is declared in protected of game, it automatically initialized constructor of play class
-	//Game loop
-	while (game.getWindowIsOpen())
+	Game* game = new Game;//Creating a game class which has all the implementation of the game
+	while (game->getWindowIsOpen())
 	{
-		{
-			//Update
-			game.update();
+		//Updates the game
+		game->update();
 
-			//Render
-			game.render();
-			//home.draw_bacground(this->window);
-		}
-
+		//Renders the game
+		game->render();
 	}
+	delete game;
 	return 0;
 }

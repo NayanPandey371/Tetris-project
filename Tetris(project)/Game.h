@@ -21,7 +21,6 @@ protected:
 	Menu menu;
 	store_data data;
 
-
 	char state[20] = "home";
 
 	//Initializer functions
@@ -29,6 +28,10 @@ protected:
 	void initwindow();
 	//bool game_is_paused;
 	bool music_off_check = false;
+
+	bool set = true;
+
+	bool c = false;
 public:
 
 	//Constructor/Destructor

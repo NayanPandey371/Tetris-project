@@ -11,5 +11,5 @@ ARROW LEFT   MOVE LEFT
 ARROR RIGHT  MOVE RIGHT
 SPACE        HARD DROP
 P            PAUSE.PLAY.MUSIC CONTROL
-press esc to return...
+press ESC to return...
 
